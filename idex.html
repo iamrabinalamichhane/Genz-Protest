@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nepal's Gen Z Uprising — September 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --crimson: #c0392b;
+    --deep-red: #7b1a1a;
+    --gold: #d4a017;
+    --ink: #0d0d0d;
+    --ash: #1a1a1a;
+    --smoke: #2d2d2d;
+    --fog: #404040;
+    --mist: #888;
+    --paper: #f2ede6;
+    --light: #faf7f2;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(13,13,13,0.92);
+    backdrop-filter: blur(12px);
+    padding: 1rem 6vw;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--crimson); letter-spacing: 0.1em; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; color: var(--fog); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+  @media(max-width:600px){.nav-links{display:none;}}
+
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 8rem 6vw 6rem; position: relative; overflow: hidden;
+    background: var(--ink);
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse at 25% 65%, rgba(192,57,43,0.16) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 20%, rgba(212,160,23,0.07) 0%, transparent 50%);
+  }
+  .hero-date { font-family:'Space Mono',monospace; font-size:0.7rem; letter-spacing:0.22em; color:var(--gold); text-transform:uppercase; margin-bottom:1.5rem; opacity:0; animation: fadeUp 0.8s ease 0.2s forwards; }
+  .hero-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(4.5rem,12vw,9.5rem); line-height:0.9; color:var(--light); opacity:0; animation: fadeUp 0.8s ease 0.4s forwards; }
+  .hero-title span { color:var(--crimson); display:block; }
+  .hero-sub { max-width:580px; margin-top:2rem; font-size:1.2rem; color:var(--mist); font-style:italic; opacity:0; animation: fadeUp 0.8s ease 0.6s forwards; }
+  .hero-stats { display:flex; gap:3rem; margin-top:3rem; opacity:0; animation: fadeUp 0.8s ease 0.8s forwards; flex-wrap:wrap; }
+  .stat-item { border-left:2px solid var(--crimson); padding-left:1rem; }
+  .stat-num { font-family:'Bebas Neue',sans-serif; font-size:2.4rem; color:var(--light); line-height:1; }
+  .stat-label { font-family:'Space Mono',monospace; font-size:0.6rem; letter-spacing:0.15em; color:var(--mist); text-transform:uppercase; }
+
+  section { padding: 6rem 6vw; }
+  .section-label { font-family:'Space Mono',monospace; font-size:0.68rem; letter-spacing:0.25em; color:var(--gold); text-transform:uppercase; margin-bottom:0.75rem; display:flex; align-items:center; gap:1rem; }
+  .section-label::after { content:''; flex:1; max-width:80px; height:1px; background:var(--gold); opacity:0.35; }
+  .section-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.5rem,5.5vw,4rem); line-height:1; color:var(--light); margin-bottom:2rem; }
+
+  .timeline-section { background: var(--ash); }
+  .timeline { position:relative; margin-top:3rem; padding-left:2rem; }
+  .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:linear-gradient(to bottom, var(--crimson), var(--gold), var(--crimson)); }
+  .timeline-item { position:relative; margin-bottom:3rem; padding-left:2rem; opacity:0; transform:translateX(-20px); transition:all 0.6s ease; }
+  .timeline-item.visible { opacity:1; transform:translateX(0); }
+  .timeline-dot { position:absolute; left:-2.6rem; top:0.4rem; width:14px; height:14px; border-radius:50%; background:var(--crimson); border:2px solid var(--ash); box-shadow:0 0 14px rgba(192,57,43,0.7); }
+  .timeline-date { font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--gold); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.4rem; }
+  .timeline-heading { font-family:'Bebas Neue',sans-serif; font-size:1.45rem; color:var(--light); letter-spacing:0.04em; margin-bottom:0.5rem; }
+  .timeline-text { color:var(--mist); font-size:0.98rem; max-width:620px; }
+
+  .causes-section { background:var(--ink); }
+  .causes-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:1.5px; margin-top:3rem; }
+  .cause-card { background:var(--ash); padding:2rem; position:relative; overflow:hidden; transition:background 0.3s; }
+  .cause-card::before { content:attr(data-num); position:absolute; top:-0.5rem; right:1rem; font-family:'Bebas Neue',sans-serif; font-size:5rem; color:var(--smoke); line-height:1; transition:color 0.3s; }
+  .cause-card:hover { background:var(--smoke); }
+  .cause-card:hover::before { color:rgba(192,57,43,0.2); }
+  .cause-icon { font-size:1.6rem; margin-bottom:1rem; }
+  .cause-title { font-family:'Bebas Neue',sans-serif; font-size:1.25rem; color:var(--light); letter-spacing:0.05em; margin-bottom:0.75rem; }
+  .cause-text { color:var(--mist); font-size:0.93rem; line-height:1.6; }
+
+  .charts-section { background:var(--ash); }
+  .charts-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:3rem; margin-top:3rem; }
+  .chart-box { background:var(--smoke); padding:2rem; border:1px solid rgba(212,160,23,0.1); }
+  .chart-title { font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--gold); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1.5rem; }
+  .chart-container { position:relative; height:240px; }
+
+  .challenges-section { background:var(--ink); }
+  .challenge-row { display:flex; gap:2rem; align-items:flex-start; margin-bottom:2.5rem; padding-bottom:2.5rem; border-bottom:1px solid rgba(255,255,255,0.05); opacity:0; transform:translateY(20px); transition:all 0.6s ease; }
+  .challenge-row.visible { opacity:1; transform:translateY(0); }
+  .challenge-num { font-family:'Bebas Neue',sans-serif; font-size:3rem; color:var(--crimson); line-height:1; min-width:58px; opacity:0.55; }
+  .challenge-title { font-family:'Bebas Neue',sans-serif; font-size:1.55rem; color:var(--light); letter-spacing:0.04em; margin-bottom:0.5rem; }
+  .challenge-text { color:var(--mist); font-size:0.97rem; }
+  .severity-bar { height:3px; background:var(--smoke); margin-top:1rem; border-radius:2px; overflow:hidden; }
+  .severity-fill { height:100%; background:linear-gradient(to right, var(--crimson), var(--gold)); border-radius:2px; width:0; transition:width 1.2s ease 0.3s; }
+
+  .aftermath-section { background:var(--ash); }
+  .aftermath-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; margin-top:3rem; }
+  @media(max-width:820px){ .aftermath-grid{grid-template-columns:1fr;} .challenge-row{flex-direction:column;gap:0.5rem;} }
+  .aftermath-quote { border-left:3px solid var(--crimson); padding-left:1.5rem; margin-bottom:2rem; }
+  .aftermath-quote p { font-style:italic; font-size:1.2rem; color:var(--paper); margin-bottom:0.5rem; }
+  .aftermath-quote cite { font-family:'Space Mono',monospace; font-size:0.62rem; color:var(--mist); letter-spacing:0.1em; text-transform:uppercase; }
+  .aftermath-text { color:var(--mist); margin-bottom:1.5rem; font-size:1rem; }
+
+  .comparison-table { width:100%; border-collapse:collapse; margin-top:1.5rem; font-size:0.9rem; }
+  .comparison-table th { font-family:'Space Mono',monospace; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); padding:0.9rem 1.2rem; text-align:left; border-bottom:1px solid rgba(212,160,23,0.25); background:var(--smoke); }
+  .comparison-table td { padding:0.9rem 1.2rem; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--mist); }
+  .comparison-table tr:hover td { background:rgba(255,255,255,0.02); color:var(--paper); }
+  .comparison-table td:first-child { color:var(--paper); }
+
+  .status-item { display:flex; justify-content:space-between; align-items:center; padding:0.75rem 1rem; background:var(--smoke); margin-bottom:4px; }
+  .status-done { color:#2ecc71; font-family:'Space Mono',monospace; font-size:0.65rem; }
+  .status-pending { color:var(--crimson); font-family:'Space Mono',monospace; font-size:0.65rem; }
+  .status-progress { color:var(--gold); font-family:'Space Mono',monospace; font-size:0.65rem; }
+
+  footer { background:var(--ash); padding:2.5rem 6vw; border-top:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+  footer p { font-family:'Space Mono',monospace; font-size:0.6rem; color:var(--fog); letter-spacing:0.1em; }
+
+  .flag-stripe { height:4px; background:linear-gradient(to right, #003580 33%, #FFFFFF 33%, #FFFFFF 66%, #DC143C 66%); opacity:0.55; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(28px);}  to{opacity:1;transform:translateY(0);} }
+  hr.divider { border:none; border-top:1px solid rgba(255,255,255,0.05); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">🇳🇵 NEPAL 2025</div>
+  <ul class="nav-links">
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#causes">Causes</a></li>
+    <li><a href="#data">Data</a></li>
+    <li><a href="#challenges">Challenges</a></li>
+    <li><a href="#aftermath">Aftermath</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="top">
+  <div class="hero-date">September 2025 · Kathmandu, Nepal · A Nation in Crisis</div>
+  <h1 class="hero-title">Nepal's<span>Gen Z</span>Uprising</h1>
+  <p class="hero-sub">A leaderless youth revolution that toppled a government, burned a parliament, and exposed the deep fractures in Nepal's democracy — demanding an end to corruption, censorship, and elite impunity.</p>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">76</div><div class="stat-label">Lives Lost</div></div>
+    <div class="stat-item"><div class="stat-num">2,113+</div><div class="stat-label">Injured</div></div>
+    <div class="stat-item"><div class="stat-num">26</div><div class="stat-label">Platforms Banned</div></div>
+    <div class="stat-item"><div class="stat-num">13,182</div><div class="stat-label">Rounds Fired</div></div>
+    <div class="stat-item"><div class="stat-num">9 days</div><div class="stat-label">To Topple a Govt</div></div>
+  </div>
+</section>
+
+<div class="flag-stripe"></div>
+
+<!-- TIMELINE -->
+<section class="timeline-section" id="timeline">
+  <div class="section-label">Chronology</div>
+  <h2 class="section-title">How It Unfolded</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">June 2025</div>
+      <div class="timeline-heading">The Spark — #NepoKids Goes Viral</div>
+      <p class="timeline-text">A viral TikTok and Reddit trend called <em>#NepoBaby</em> exposes the lavish lifestyles of politicians' children — while citizens earn ~$1,400/year. A court issues an arrest warrant for journalist Dil Bhusan Pathak for reporting that a minister's son purchased the Kathmandu Hilton Hotel using political influence, igniting generational fury.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">4 September 2025</div>
+      <div class="timeline-heading">Government Bans 26 Social Platforms</div>
+      <p class="timeline-text">PM K.P. Sharma Oli's government orders shutdown of Facebook, YouTube, WhatsApp, Instagram, X, LinkedIn, Reddit, Signal, Snapchat and 17 more platforms. Officially framed as a regulatory intervention — widely condemned as an attempt to silence the #NepoKids dissent. VPN registrations surge immediately.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">8 September 2025 — "Black Sunday"</div>
+      <div class="timeline-heading">Mass Protests & State Violence</div>
+      <p class="timeline-text">Thousands of students in school uniforms fill Kathmandu streets outside parliament. By 11am the streets are a sea of youth. Police deploy water cannons, tear gas, rubber bullets, and live ammunition — nearly all gunshots strike above the waist. 19 killed that day including a 12-year-old. 2,642 live bullets fired. Protests erupt across all 7 provinces.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">9 September 2025</div>
+      <div class="timeline-heading">Parliament Set Ablaze — PM Oli Resigns</div>
+      <p class="timeline-text">Protesters storm and set fire to Nepal's federal parliament building. Supreme Court and government offices attacked. PM K.P. Sharma Oli resigns. Social media ban is lifted. Approximately 14,000 inmates freed during chaos. Army imposes nationwide curfew September 10. UN Secretary General Guterres urges restraint.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">12 September 2025</div>
+      <div class="timeline-heading">Sushila Karki Sworn In as Interim PM</div>
+      <p class="timeline-text">Nepal's former Supreme Court Chief Justice Sushila Karki is sworn in as interim prime minister — a first for a woman in this role. Gen Z leaders hold historic discussions with the Nepal Army over Discord, organized by Sudan Gurung of Hami Nepal, to shape the transitional government.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">17 September 2025</div>
+      <div class="timeline-heading">National Day of Mourning</div>
+      <p class="timeline-text">Nepal observes a national day of mourning. Death toll confirmed at 76 (22 protesters, 3 police, 10 prisoners, 41 others). Over 2,113 injured. 423 arrested for protest-related violence. A judicial commission formed — human rights groups warn of credibility concerns as no police officer has been charged for live-fire killings.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">5 March 2026</div>
+      <div class="timeline-heading">Historic Elections — 120+ New Parties</div>
+      <p class="timeline-text">Nepal holds general elections with over 120 registered parties — more than a third formed after the uprising, the most since 2006. Multiple Gen Z activists run for parliament. Nepal becomes the third South Asian government felled by youth protests in three years, after Sri Lanka (2022) and Bangladesh (2024).</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CAUSES -->
+<section class="causes-section" id="causes">
+  <div class="section-label">Root Causes</div>
+  <h2 class="section-title">Why the Youth Revolted</h2>
+  <div class="causes-grid">
+    <div class="cause-card" data-num="01">
+      <div class="cause-icon">💰</div>
+      <div class="cause-title">Systemic Corruption & Nepotism</div>
+      <p class="cause-text">Decades of high-profile scandals: the 2001 Lauda Air lease case, 2017 Nepal Airlines procurement fraud, 2023 Bhutanese refugee scam, airport gold smuggling seizures. Politicians' children flaunting extreme wealth while citizens earn ~$1,400/year became the immediate catalyst.</p>
+    </div>
+    <div class="cause-card" data-num="02">
+      <div class="cause-icon">📵</div>
+      <div class="cause-title">Social Media Censorship</div>
+      <p class="cause-text">The abrupt ban of 26 platforms on September 4 — perceived as direct suppression of #NepoKids — was the immediate trigger. Critics compared it to China's internet strategy, but Nepal offered no domestic alternatives, creating a complete information blackout for youth.</p>
+    </div>
+    <div class="cause-card" data-num="03">
+      <div class="cause-icon">📉</div>
+      <div class="cause-title">Youth Unemployment Crisis</div>
+      <p class="cause-text">20.85% of Nepalis aged 15–24 were unemployed in 2024 (World Bank). Educated young people cannot find work matching their qualifications, driving mass emigration to Gulf states and Malaysia in a "brain drain" that hollows out Nepal's institutions.</p>
+    </div>
+    <div class="cause-card" data-num="04">
+      <div class="cause-icon">🏛️</div>
+      <div class="cause-title">Political Instability</div>
+      <p class="cause-text">Since 2015, Nepal has experienced 8 successive government changes among three major parties. Young people feel structurally excluded from a system dominated by aging elites who they accuse of betraying the promise of the 2008 republic that ended the monarchy.</p>
+    </div>
+    <div class="cause-card" data-num="05">
+      <div class="cause-icon">⚖️</div>
+      <div class="cause-title">Wealth Gap & Elite Impunity</div>
+      <p class="cause-text">The arrest of a journalist for reporting on a minister's son purchasing the Kathmandu Hilton — while most Nepalis earn under $1,400/year — crystallized generations of rage at a system where political connections directly translate into obscene, untouchable wealth.</p>
+    </div>
+    <div class="cause-card" data-num="06">
+      <div class="cause-icon">🌐</div>
+      <div class="cause-title">Global Gen Z Inspiration</div>
+      <p class="cause-text">Inspired by Bangladesh's 2024 revolution and Kenya's Gen Z protests, Nepali youth had a proven playbook: leaderless, digitally-organized via Discord, using the One Piece Jolly Roger flag as a symbol of resistance — part of a 2025 "Asian Spring" sweeping 11 countries.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- DATA -->
+<section class="charts-section" id="data">
+  <div class="section-label">Data & Analysis</div>
+  <h2 class="section-title">By the Numbers</h2>
+  <div class="charts-grid">
+    <div class="chart-box">
+      <div class="chart-title">Casualties Breakdown — Total 76 Deaths</div>
+      <div class="chart-container"><canvas id="casualtiesChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Nepal Youth Unemployment Rate 2018–2024 (%)</div>
+      <div class="chart-container"><canvas id="unemploymentChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Force Deployed — Rounds Fired (Sept 8–9)</div>
+      <div class="chart-container"><canvas id="forceChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Nepal Government Changes by Year (2015–2025)</div>
+      <div class="chart-container"><canvas id="stabilityChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Trade Deficit with Neighbors (NPR Billion, FY 2024–25)</div>
+      <div class="chart-container"><canvas id="tradeChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Political Parties Registered for March 2026 Elections</div>
+      <div class="chart-container"><canvas id="partiesChart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CHALLENGES -->
+<section class="challenges-section" id="challenges">
+  <div class="section-label">Post-Uprising Analysis</div>
+  <h2 class="section-title">Challenges Nepal Now Faces</h2>
+  <p style="color:var(--mist); font-size:1rem; max-width:700px; margin-bottom:3rem;">The uprising succeeded in toppling a government. The harder work begins now — and the bar indicates severity of each challenge.</p>
+  <div>
+    <div class="challenge-row" data-severity="92">
+      <div class="challenge-num">01</div>
+      <div class="challenge-content">
+        <div class="challenge-title">Political Fragmentation & Governance Vacuum</div>
+        <p class="challenge-text">With 120+ parties registered for 2026 elections — over a third formed post-uprising — Nepal faces extreme fragmentation. No party commands majority trust. Forming stable coalitions will be near-impossible, potentially restarting the same cycle of weak governance that triggered the protests in the first place.</p>
+        <div class="severity-bar"><div class="severity-fill" data-w="92"></div></div>
+      </div>
+    </div>
+    <div class="challenge-row" data-severity="88">
+      <div class="challenge-num">02</div>
+      <div class="challenge-content">
+        <div class="challenge-title">Accountability & Human Rights Justice</div>
+        <p class="challenge-text">Security forces fired 2,642 live bullets, almost all striking above the waist — a gross violation of crowd control protocols. A 12-year-old was killed. As of November 2025, 423 protesters were arrested but no police officer charged for unlawful killings. Without accountability, structural impunity — the core grievance — will persist.</p>
+        <div class="severity-bar"><div class="severity-fill" data-w="88"></div></div>
+      </div>
+    </div>
+    <div class="challenge-row" data-severity="86">
+      <div class="challenge-num">03</div>
+      <div class="challenge-content">
+        <div class="challenge-title">Economic Damage & Trade Disruption</div>
+        <p class="challenge-text">India's exports to Nepal fell 16.6% in September 2025 as road transport — the primary trade channel — was paralyzed. Nepal's import-dependent economy carries a $144B+ trade deficit with India. Government buildings destroyed, essential services disrupted. Tourism — a key revenue source — took a major hit that will take years to recover.</p>
+        <div class="severity-bar"><div class="severity-fill" data-w="86"></div></div>
+      </div>
+    </div>
+    <div class="challenge-row" data-severity="80">
+      <div class="challenge-num">04</div>
+      <div class="challenge-content">
+        <div class="challenge-title">Youth Unemployment & Brain Drain</div>
+        <p class="challenge-text">With 20.85% youth unemployment and a median national age of 25, Nepal's greatest demographic asset risks becoming its biggest liability. Without structural economic reform — jobs, manufacturing investment, entrepreneurship — post-protest political energy will dissipate as an entire generation continues to emigrate.</p>
+        <div class="severity-bar"><div class="severity-fill" data-w="80"></div></div>
+      </div>
+    </div>
+    <div class="challenge-row" data-severity="76">
+      <div class="challenge-num">05</div>
+      <div class="challenge-content">
+        <div class="challenge-title">Geopolitical Pressure — India & China</div>
+        <p class="challenge-text">Nepal sits between two Asian superpowers recalibrating their engagement post-upheaval. India (71.9% of Nepal's exports go there) grew concerned over instability threatening bilateral trade. China sees an opportunity to expand influence. New leadership must navigate these pressures without sacrificing sovereignty or reform momentum.</p>
+        <div class="severity-bar"><div class="severity-fill" data-w="76"></div></div>
+      </div>
+    </div>
+    <div class="challenge-row" data-severity="72">
+      <div class="challenge-num">06</div>
+      <div class="challenge-content">
+        <div class="challenge-title">Disinformation & Digital Governance</div>
+        <p class="challenge-text">A report by Cyabra found coordinated fake profiles on X manipulating protest narratives in September 2025. The social media ban revealed a government with authoritarian digital instincts. Nepal must now build a balanced digital governance framework — preventing misinformation without enabling censorship — a balance no South Asian democracy has yet mastered.</p>
+        <div class="severity-bar"><div class="severity-fill" data-w="72"></div></div>
+      </div>
+    </div>
+    <div class="challenge-row" data-severity="79">
+      <div class="challenge-num">07</div>
+      <div class="challenge-content">
+        <div class="challenge-title">Converting Protest Energy into Institutional Reform</div>
+        <p class="challenge-text">Nepal is the third South Asian government toppled by Gen Z protests in 3 years (Sri Lanka 2022, Bangladesh 2024, Nepal 2025). But in Bangladesh, post-revolt "stability has remained elusive." The hardest part: translating street energy into anti-corruption law, judicial reform, and economic policy — against entrenched elites who still dominate institutions.</p>
+        <div class="severity-bar"><div class="severity-fill" data-w="79"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- AFTERMATH -->
+<section class="aftermath-section" id="aftermath">
+  <div class="section-label">Global Context & Legacy</div>
+  <h2 class="section-title">Aftermath & What Comes Next</h2>
+  <div class="aftermath-grid">
+    <div>
+      <div class="aftermath-quote">
+        <p>"The government's actions were seen as reactive and arrogant rather than transformative."</p>
+        <cite>— Nepali Civil Society Observer, CSPPS Report</cite>
+      </div>
+      <p class="aftermath-text">Nepal's Gen Z uprising did not emerge from a vacuum — it is part of a global wave of youth-led revolts spanning 11 countries in 2025, from Nairobi to Jakarta, driven by the same forces: digital connectivity, elite impunity, and economic exclusion.</p>
+      <p class="aftermath-text">The protests were remarkably effective in the short term: the social media ban was lifted, PM Oli resigned within 5 days, and an interim government was installed. But Nepal's real challenge is the decade ahead — structural reform against resistant institutions.</p>
+      <p class="aftermath-text">The March 2026 elections offer an unprecedented democratic opportunity, with Gen Z activists running for office and new parties pledging reform. But analysts caution: Japan and Thailand's recent elections — where voters chose conservative establishment parties despite massive reform pressure — show protest energy does not automatically become electoral transformation.</p>
+      <p class="aftermath-text">The movement's true legacy will be decided not by what burned in September 2025, but by what gets built in the years that follow.</p>
+    </div>
+    <div>
+      <h3 style="font-family:'Bebas Neue',sans-serif; font-size:1.6rem; color:var(--light); letter-spacing:0.04em; margin-bottom:1.5rem;">South Asia's Gen Z Revolts</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr><th>Country</th><th>Year</th><th>Trigger</th><th>Post-Crisis Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Sri Lanka</td><td>2022</td><td>Economic collapse, fuel crisis</td><td>Recovered relatively quickly</td></tr>
+          <tr><td>Bangladesh</td><td>2024</td><td>Job quota discrimination</td><td>Stability remains elusive</td></tr>
+          <tr><td>🇳🇵 Nepal</td><td>2025</td><td>#NepoKids + social media ban</td><td>Uncertain — March 2026 elections</td></tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:2rem;">
+        <div class="section-label" style="margin-bottom:1rem;">Key Protest Demands — Status</div>
+        <div class="status-item"><span style="color:var(--paper);font-size:0.92rem;">Social media ban lifted</span><span class="status-done">✓ DONE</span></div>
+        <div class="status-item"><span style="color:var(--paper);font-size:0.92rem;">PM Oli resigned</span><span class="status-done">✓ DONE</span></div>
+        <div class="status-item"><span style="color:var(--paper);font-size:0.92rem;">Interim government installed</span><span class="status-done">✓ DONE</span></div>
+        <div class="status-item"><span style="color:var(--paper);font-size:0.92rem;">Police accountability for killings</span><span class="status-pending">✗ PENDING</span></div>
+        <div class="status-item"><span style="color:var(--paper);font-size:0.92rem;">Anti-corruption legislation</span><span class="status-progress">⟳ IN PROGRESS</span></div>
+        <div class="status-item"><span style="color:var(--paper);font-size:0.92rem;">Youth economic reform</span><span class="status-pending">✗ PENDING</span></div>
+        <div class="status-item"><span style="color:var(--paper);font-size:0.92rem;">Free democratic elections</span><span class="status-progress">⟳ MARCH 5, 2026</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="flag-stripe"></div>
+
+<footer>
+  <p>NEPAL GEN Z UPRISING — DEEP RESEARCH & ANALYSIS · FEB 2026</p>
+  <p style="max-width:600px; text-align:right;">Sources: Wikipedia · Harvard T.H. Chan School of Public Health (Atrocity Prevention Lab) · Human Rights Watch · Encyclopaedia Britannica · Council on Foreign Relations · East Asia Forum · CSPPS · Observer Research Foundation · Waging Nonviolence · World Bank</p>
+</footer>
+
+<script>
+// Scroll animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(el => {
+    if (el.isIntersecting) {
+      el.target.classList.add('visible');
+      const fill = el.target.querySelector('.severity-fill');
+      if (fill) setTimeout(() => { fill.style.width = fill.dataset.w + '%'; }, 200);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.timeline-item, .challenge-row').forEach(el => observer.observe(el));
+
+const C = '#c0392b', G = '#d4a017', S = '#3d3d3d', D = '#555';
+Chart.defaults.color = '#777';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+Chart.defaults.font.family = "'Space Mono', monospace";
+Chart.defaults.font.size = 10;
+
+// Casualties
+new Chart(document.getElementById('casualtiesChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Protesters — 22', 'Police — 3', 'Prisoners — 10', 'Other/Unconfirmed — 41'],
+    datasets: [{ data: [22, 3, 10, 41], backgroundColor: [C, G, S, D], borderColor: '#1a1a1a', borderWidth: 3 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 9 } } } }, cutout: '62%' }
+});
+
+// Unemployment
+new Chart(document.getElementById('unemploymentChart'), {
+  type: 'line',
+  data: {
+    labels: ['2018','2019','2020','2021','2022','2023','2024'],
+    datasets: [{ label: 'Youth Unemployment %', data: [19.2,19.8,21.5,20.1,19.9,20.3,20.85], borderColor: C, backgroundColor: 'rgba(192,57,43,0.1)', borderWidth: 2.5, fill: true, tension: 0.4, pointBackgroundColor: C, pointRadius: 4 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 17, max: 24, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => v+'%' } }, x: { grid: { display: false } } } }
+});
+
+// Force
+new Chart(document.getElementById('forceChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Live Bullets\n2,642', 'Rubber Rounds\n1,884', 'Tear Gas Shells\n6,279'],
+    datasets: [{ data: [2642, 1884, 6279], backgroundColor: [C, G, S], borderRadius: 3, borderSkipped: false }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false } } } }
+});
+
+// Stability
+new Chart(document.getElementById('stabilityChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+    datasets: [{ label: 'Govt Changes', data: [1,1,1,1,0,1,1,1,0,1,1], backgroundColor: ctx => ctx.raw > 0 ? C : S, borderRadius: 3 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { max: 2, ticks: { stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false } } } }
+});
+
+// Trade
+new Chart(document.getElementById('tradeChart'), {
+  type: 'bar',
+  data: {
+    labels: ['India', 'China', 'Others (combined)'],
+    datasets: [{ label: 'Deficit (NPR Bn)', data: [144.67, 51.80, 22.5], backgroundColor: [C, G, S], borderRadius: 3 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' } }, y: { grid: { display: false } } } }
+});
+
+// Parties
+new Chart(document.getElementById('partiesChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Pre-existing Parties (~80)', 'New Post-Uprising Parties (40+)'],
+    datasets: [{ data: [80, 40], backgroundColor: [S, C], borderColor: '#1a1a1a', borderWidth: 3 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 9 } } } }, cutout: '58%' }
+});
+</script>
+</body>
+</html>
